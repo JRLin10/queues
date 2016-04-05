@@ -1,4 +1,4 @@
-package queues;
+
 
 import java.lang.*;
 import java.util.Iterator;
@@ -12,7 +12,9 @@ public class Deque<Item> implements Iterable<Item> {
     private int count;
 
     public Deque() {
-        
+        count = 0;
+        first = null;
+        last = null;
     }                           // construct an empty deque
 
     private class Node {
@@ -60,60 +62,68 @@ public class Deque<Item> implements Iterable<Item> {
     }                       // return the number of items on the deque
 
     public void addFirst(Item item) {
-        Node oldfirst = first;
+        if (item == null) {
+            throw new java.lang.NullPointerException();
+        }
+        Node oldFirst = first;
         first = new Node();
         first.item = item;
         first.previous = null;
         if (isEmpty()) {
             last = first;
+        } else {
+            oldFirst.previous = first;
         }
-        else {
-            oldfirst.previous = first;
-        }
-        first.next = oldfirst;
+        first.next = oldFirst;
         count++;
 
     }         // add the item to the front
 
     public void addLast(Item item) {
-        Node oldlast = last;
+        if (item == null) {
+            throw new java.lang.NullPointerException();
+        }
+        Node oldLast = last;
         last = new Node();
         last.item = item;
         last.next = null;
         if (isEmpty()) {
             first = last;
+        } else {
+            oldLast.next = last;
         }
-        else {
-            oldlast.next = last;
-        }
-        last.previous = oldlast;
+        last.previous = oldLast;
         count++;
 
     }         // addLast the item to the end
 
     public Item removeFirst() {
+        if (isEmpty()) {
+            throw new UnsupportedOperationException();
+        }
         Item item = first.item;
-        first = first.next;
+        if (first.next != null) first = first.next;
         first.previous = null;
+        count--;
         if (isEmpty()) {
             last = null;
             first = null;
         }
-        count--;
         return item;
-
-
     }              // removeFirst and return the item from the front
 
     public Item removeLast() {
+        if (isEmpty()) {
+            throw new UnsupportedOperationException();
+        }
         Item temp = last.item;
         last = last.previous;
         last.next = null;
+        count--;
         if (isEmpty()) {
             last = null;
             first = null;
         }
-        count--;
         return temp;
 
 
